@@ -1,30 +1,37 @@
-package io.github.talvysh;
+package io.github.talvysh
 
-import org.bukkit.plugin.java.JavaPlugin;
+import io.github.talvysh.region.Region
+import org.bukkit.plugin.java.JavaPlugin
+import java.util.logging.Level
 
-import java.sql.Connection;
-import java.util.logging.Level;
+class GrimCraft : JavaPlugin() {
 
-public final class GrimCraft extends JavaPlugin {
-    public static GrimCraft ref;
-
-    public void save(){}
-
-    public void load(){}
-
-    @Override
-    public void onEnable() {
-        ref = this;
-        // Plugin startup logic
-        getLogger().log(Level.INFO, "GrimCraft enabled!");
-
-        // Test DB
-        SaveData.init();
+    companion object {
+        lateinit var ref: GrimCraft
     }
 
-    @Override
-    public void onDisable() {
+    override fun onEnable() {
+        ref = this
+
+        // Plugin startup logic
+        logger.log(Level.INFO, "GrimCraft enabled!")
+
+        connectListeners()
+        connectCommands()
+
+        Region.initialize()
+
+        val connection = DB.connect()
+        val prep = connection!!.prepareStatement("")
+        prep.executeQuery()
+    }
+
+    override fun onDisable() {
         // Plugin shutdown logic
         // TODO: Make necessary DB calls.
     }
+
+    fun connectListeners(){}
+
+    fun connectCommands(){}
 }
